@@ -92,8 +92,8 @@ class AllJobs extends Component {
     const responseProfile = await fetch(profileApiUrl, optionsProfile)
 
     if (responseProfile.ok === true) {
-      const fetchedDataProfile = [await responseProfile.json()]
-      const updatedDataProfile = fetchedDataProfile.map(eachItem => ({
+      const fetchedDataJobs = await responseProfile.json()
+      const updatedDataProfile = [fetchedDataJobs.jobs].map(eachItem => ({
         name: eachItem.profile_details.name,
         profileImageUrl: eachItem.profile_details.profile_image_url,
         shortBio: eachItem.profile_details.short_bio,
@@ -109,7 +109,7 @@ class AllJobs extends Component {
   }
 
   onGetJobDetails = async () => {
-    this.setState({apiJobsStatus: apiJobsStatusConstants.inProgress})
+    this.setState({apiJobStatus: apiJobsStatusConstants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
     const {checkboxInputs, radioInput, searchInput} = this.state
     const jobsApiUrl = `https://apis.ccbp.in/jobs?employment_type=${checkboxInputs}&minimum_package=${radioInput}&search=${searchInput}`
@@ -123,7 +123,7 @@ class AllJobs extends Component {
 
     if (responseJobs.ok === true) {
       const fetchedDataJobs = await responseJobs.json()
-      const updatedDataJobs = fetchedDataJobs.map(eachItem => ({
+      const updatedDataJobs = [fetchedDataJobs.jobs].map(eachItem => ({
         companyLogoUrl: eachItem.company_logo_url,
         employmentType: eachItem.employment_type,
         id: eachItem.id,
@@ -135,10 +135,10 @@ class AllJobs extends Component {
       }))
       this.setState({
         jobsData: updatedDataJobs,
-        apiJobsStatus: apiJobsStatusConstants.success,
+        apiJobStatus: apiJobsStatusConstants.success,
       })
     } else {
-      this.setState({apiJobsStatus: apiJobsStatusConstants.failure})
+      this.setState({apiJobStatus: apiJobsStatusConstants.failure})
     }
   }
 
